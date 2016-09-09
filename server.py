@@ -1,3 +1,7 @@
+# -- members
+#   1. TAWEERAT CHAIMAN 5710546259
+#   2. PATINYA YONGYAI 5710547204
+
 import sys
 from socket import *
 import hashlib
