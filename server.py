@@ -3,9 +3,12 @@ from socket import *
 import hashlib
 import base64
 import time
+
+# -- constants
 SERVER_PORT = 12345
 types = ['md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512'] # type of encryption
 
+# -- methods
 def make_connection():
     global sock,info,addr,port,in_stream,listen_sock
     sock,info = listen_sock.accept() # accept client's connection
@@ -34,12 +37,14 @@ def log(text): # print log on server side
     print(text)
     print("log : timestamp : " + str(time.time()))
 
+# -- listening for clients
 listen_sock = socket() # create instance of socket
 listen_sock.bind(('0.0.0.0',SERVER_PORT)) # bind ip and port to server
 listen_sock.listen(10) # listening with limited number of connection
 log("Listening on port " + str(SERVER_PORT))
 make_connection()
 
+# -- magic happens here
 while True: # listening
     msg = in_stream.readline().strip() # receive message from client
     if msg == '':
@@ -68,8 +73,9 @@ while True: # listening
         make_connection() # make new connection
     else: # throw an error
         sock.send('ERROR|')
-        sock.send('Please try again\r\n')
+        sock.send('Error terminating program\r\n')
 
+# -- close the connection and socket.
 print("Client closed connection")
 in_stream.close()
 sock.close()
