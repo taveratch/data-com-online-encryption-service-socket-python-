@@ -1,6 +1,7 @@
 # -- members
 #   1. TAWEERAT CHAIMAN 5710546259
 #   2. PATINYA YONGYAI 5710547204
+# *** Supported python 3.5.x
 
 import sys
 from socket import *
@@ -22,6 +23,7 @@ def make_connection():
     log("Client is connected from " + addr + " port : " + str(port))
 
 def hash_text(hashtype,text): # use hashlib to hash the text
+    text = text.encode()
     if hashtype == '1':
         return hashlib.md5(text).hexdigest()
     elif hashtype == '2':
@@ -56,28 +58,28 @@ while True: # listening
         continue
     msgs = msg.split(',')
     if msgs[0] == 'CONNECTION': #send to menu to client
-        sock.send('MENU|')
-        sock.send('Please choose type of hash,')
-        sock.send('1. md5,')
-        sock.send('2. sha1,')
-        sock.send('3. sha224,')
-        sock.send('4. sha256,')
-        sock.send('5. sha384,')
-        sock.send('6. sha512,\r\n')
+        sock.send('MENU|'.encode())
+        sock.send('Please choose type of hash,'.encode())
+        sock.send('1. md5,'.encode())
+        sock.send('2. sha1,'.encode())
+        sock.send('3. sha224,'.encode())
+        sock.send('4. sha256,'.encode())
+        sock.send('5. sha384,'.encode())
+        sock.send('6. sha512,\r\n'.encode())
     elif msgs[0] in '123456' and msgs[1] == '': # wait for plain text
         hashtype = types[int(msgs[0])-1]
         log("log : using " + hashtype)
-        sock.send('ENTER_TEXT|')
-        sock.send('Please enter plain text to encrypt ('+hashtype+') : \r\n')
+        sock.send('ENTER_TEXT|'.encode())
+        sock.send(('Please enter plain text to encrypt ('+hashtype+') : \r\n').encode())
     elif len(msgs) >= 2 and len(msgs[1]) > 0: # send encrypted text to client
         log('log : returned encrypted text')
-        sock.send('ENCRYPTED|')
-        sock.send('Encrypted text ('+ types[int(msgs[0])-1]+') : ')
-        sock.send(str(hash_text(msgs[0],msgs[1]))+',\r\n'.encode())
+        sock.send('ENCRYPTED|'.encode())
+        sock.send(('Encrypted text ('+ types[int(msgs[0])-1]+') : ').encode())
+        sock.send((str(hash_text(msgs[0],msgs[1]))+',\r\n').encode())
         make_connection() # make new connection
     else: # throw an error
-        sock.send('ERROR|')
-        sock.send('Error terminating program\r\n')
+        sock.send('ERROR|'.encode())
+        sock.send('Error terminating program\r\n'.encode())
 
 # -- close the connection and socket.
 print("Client closed connection")

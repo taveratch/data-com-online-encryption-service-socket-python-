@@ -1,6 +1,7 @@
 # -- members
 #   1. TAWEERAT CHAIMAN 5710546259
 #   2. PATINYA YONGYAI 5710547204
+# *** Supported python 3.5.x
 
 from socket import *
 import sys
@@ -16,7 +17,7 @@ print('Connection established')
 in_stream = sock.makefile('r')
 
 # -- send command to get menu from server
-sock.send('CONNECTION,\r\n')
+sock.send('CONNECTION,\r\n'.encode())
 # -- read first msg from server
 response = in_stream.readline().strip()
 
@@ -30,12 +31,12 @@ while response != "":
 
     # -- states
     if state == 'MENU':
-        option = raw_input(msg + '-> ')
+        option = input(msg + '-> ')
         hashtype = option
-        sock.send(option+',\r\n')
+        sock.send((option+',\r\n').encode())
     elif state == 'ENTER_TEXT':
-        option = raw_input(msg + '-> ')
-        sock.send(hashtype+','+option+'\r\n')
+        option = input(msg + '-> ')
+        sock.send((hashtype+','+option+'\r\n').encode())
     elif state == 'ENCRYPTED':
         print(msg)
         break
